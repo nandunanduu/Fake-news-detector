@@ -34,9 +34,17 @@ def get_model(model_type: str = 'logistic_regression') -> FakeNewsDetector | Non
                 model_type,
                 directory=os.path.join(ROOT, 'models'),
             )
-        except FileNotFoundError:
+        except Exception:
             _models[model_type] = None
     return _models[model_type]
+
+
+# ── Global error handler — always return JSON, never HTML ─────────────────
+@app.errorhandler(Exception)
+def handle_exception(e):
+    import traceback
+    app.logger.error(traceback.format_exc())
+    return jsonify({'error': str(e)}), 500
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -69,13 +77,24 @@ def predict():
             'error': 'Model not found. Run python train.py first and redeploy.'
         }), 503
 
-    cleaned = clean_text(raw_text)
+    try:
+        cleaned = clean_text(raw_text)
+    except Exception as e:
+        return jsonify({'error': f'Preprocessing error: {e}'}), 500
+
     if len(cleaned.split()) < 3:
         return jsonify({'error': 'Text too short after preprocessing.'}), 400
 
-    prediction, confidence, prob_dict = detector.predict(cleaned)
-    top_words = detector.get_top_features(cleaned, n=12)
-    save_prediction(raw_text, prediction, confidence, model_type)
+    try:
+        prediction, confidence, prob_dict = detector.predict(cleaned)
+        top_words = detector.get_top_features(cleaned, n=12)
+    except Exception as e:
+        return jsonify({'error': f'Model error: {e}'}), 500
+
+    try:
+        save_prediction(raw_text, prediction, confidence, model_type)
+    except Exception:
+        pass  # never let history saving break a prediction
 
     return jsonify({
         'prediction': prediction,
