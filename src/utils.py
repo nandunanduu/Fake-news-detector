@@ -8,7 +8,11 @@ from typing import List, Dict, Tuple, Optional
 
 import pandas as pd
 
-HISTORY_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'prediction_history.json')
+# Vercel's filesystem is read-only — use /tmp when running on Vercel
+if os.environ.get('VERCEL'):
+    HISTORY_FILE = '/tmp/prediction_history.json'
+else:
+    HISTORY_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'prediction_history.json')
 
 
 def load_history() -> List[Dict]:

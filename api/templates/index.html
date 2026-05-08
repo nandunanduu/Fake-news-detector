@@ -494,11 +494,13 @@ async function fetchURL() {
   btn.disabled = true; btn.textContent = '⏳';
 
   try {
-    const res  = await fetch('/fetch-url', {
+    const res = await fetch('/fetch-url', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ url }),
     });
-    const data = await res.json();
+    let data;
+    try { data = await res.json(); }
+    catch { showError('urlError', `Server error (${res.status}) — please try again.`); return; }
     if (!res.ok || data.error) { showError('urlError', data.error || 'Fetch failed.'); return; }
 
     urlFetched = { title: data.title, text: data.text };
@@ -554,15 +556,17 @@ async function analyse() {
 
   setLoading(true);
   try {
-    const res  = await fetch('/predict', {
+    const res = await fetch('/predict', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ text, model: activeModel }),
     });
-    const data = await res.json();
-    if (!res.ok || data.error) { showError('analyseError', data.error); return; }
+    let data;
+    try { data = await res.json(); }
+    catch { showError('analyseError', `Server error (${res.status}) — please try again.`); return; }
+    if (!res.ok || data.error) { showError('analyseError', data.error || `Error ${res.status}`); return; }
     renderResult(data);
   } catch(e) {
-    showError('analyseError', 'Network error: ' + e.message);
+    showError('analyseError', 'Could not reach the server — check your connection and try again.');
   } finally {
     setLoading(false);
   }
