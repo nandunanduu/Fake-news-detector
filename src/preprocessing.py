@@ -51,11 +51,18 @@ except Exception:
 
 try:
     from nltk.tokenize import word_tokenize as _wt
-    def _tokenize(text: str):
-        return _wt(text)
+    _NLTK_TOKENIZER_AVAILABLE = True
 except Exception:
-    def _tokenize(text: str):  # type: ignore[misc]
-        return text.split()
+    _NLTK_TOKENIZER_AVAILABLE = False
+
+def _tokenize(text: str):
+    """Tokenize with NLTK word_tokenize; fall back to str.split() if data missing."""
+    if _NLTK_TOKENIZER_AVAILABLE:
+        try:
+            return _wt(text)
+        except Exception:   # LookupError: punkt_tab / punkt not found on server
+            pass
+    return text.split()
 
 
 def clean_text(text: str) -> str:
