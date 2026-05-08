@@ -250,11 +250,100 @@
     .chevron { transition: transform .25s; }
     .chevron.open { transform: rotate(180deg); }
 
-    /* ── Responsive ── */
-    @media (max-width: 500px) {
-      .prob-row { grid-template-columns: 1fr; }
-      .word-label { width: 80px; }
-      .model-row { flex-direction: column; }
+    /* ══════════════════════════════════════
+       RESPONSIVE — Tablet  (≤ 768 px)
+    ══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .container { padding: 0 16px 48px; }
+
+      .hero { padding: 36px 0 24px; }
+      .hero-sub { font-size: .92rem; }
+
+      .card { padding: 20px; }
+
+      /* Tabs: allow wrapping so they don't overflow */
+      .tabs { flex-wrap: wrap; gap: 6px; }
+      .tab-btn { padding: 8px 14px; font-size: .82rem; flex: 1; min-width: 100px; text-align: center; }
+
+      /* URL row: stack on tablet */
+      .url-row { flex-direction: column; gap: 8px; }
+      .url-row input { width: 100%; }
+      #fetchBtn { width: 100%; padding: 12px; }
+
+      /* Slightly narrower word label */
+      .word-label { width: 100px; }
+
+      /* History row: hide confidence on tablet to avoid overflow */
+      .history-row { grid-template-columns: 1fr auto; }
+      .history-row .h-conf { display: none; }
+
+      /* Ensure buttons are finger-friendly (≥44px) */
+      .btn-primary  { padding: 14px; font-size: .97rem; }
+      .btn-secondary { padding: 11px 16px; }
+      .model-btn     { padding: 11px; }
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE — Mobile  (≤ 480 px)
+    ══════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .container { padding: 0 12px 40px; }
+
+      .hero { padding: 28px 0 20px; }
+      .hero-sub { font-size: .85rem; }
+      .hero-divider { margin-top: 10px; }
+
+      .card { padding: 16px; border-radius: 12px; }
+
+      /* Model buttons: stack vertically */
+      .model-row { flex-direction: column; gap: 8px; }
+      .model-btn { padding: 12px; font-size: .85rem; }
+
+      /* Tabs: full-width rows */
+      .tabs { flex-direction: column; gap: 6px; }
+      .tab-btn { width: 100%; padding: 12px; font-size: .88rem; text-align: left; }
+
+      /* Smaller textarea on mobile */
+      textarea { height: 150px; font-size: .9rem; }
+
+      /* Clear button: smaller */
+      .clear-btn { padding: 4px 8px; font-size: .74rem; }
+
+      /* Probability cards: stack */
+      .prob-row { grid-template-columns: 1fr; gap: 10px; }
+      .prob-value { font-size: 1.7rem; }
+
+      /* Word chart: compress label */
+      .word-label { width: 75px; font-size: .76rem; }
+      .word-direction { width: 32px; font-size: .65rem; }
+      .word-bar-row { gap: 6px; }
+
+      /* Verdict: smaller letter-spacing */
+      .verdict-fake,
+      .verdict-real { padding: 18px 16px; letter-spacing: 1px; }
+
+      /* History row: single-column on mobile */
+      .history-row { grid-template-columns: 1fr auto; gap: 6px; padding: 10px; }
+      .history-row .h-conf { display: none; }
+      .history-row .h-text { font-size: .8rem; }
+
+      /* Action buttons: stack */
+      #historyContent > div:last-child { flex-direction: column; }
+
+      /* Section header: smaller */
+      .section-header { font-size: .88rem; margin: 18px 0 10px; }
+
+      /* URL meta */
+      .url-meta { padding: 10px 12px; font-size: .84rem; }
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE — Small phones  (≤ 360 px)
+    ══════════════════════════════════════ */
+    @media (max-width: 360px) {
+      .hero-title { font-size: 1.55rem; }
+      .word-label { width: 60px; font-size: .72rem; }
+      .card { padding: 14px; }
     }
   </style>
 </head>
